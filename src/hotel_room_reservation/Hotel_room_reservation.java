@@ -2,8 +2,8 @@ package hotel_room_reservation;
 import java.io.*;
 import java.util.*;
 public class Hotel_room_reservation {
-   private static final String ROOMS_FILE_NAME = "rooms.ser";
-    private static final String RESERVATIONS_FILE_NAME = "reservations.ser";
+   private static final String ROOMS_FILE_NAME = "rooms.txt";
+    private static final String RESERVATIONS_FILE_NAME = "reservations.txt";
     private static List<Room> rooms;
     private static List<Reservation> reservations;
     private static Scanner scanner = new Scanner(System.in);
@@ -18,7 +18,7 @@ public class Hotel_room_reservation {
         }
     }
 
-    private static void displayMenu() {
+    public static void displayMenu() {
         int choice = 0;
         do {
             System.out.println("1. View Rooms");
@@ -58,17 +58,17 @@ public class Hotel_room_reservation {
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
             }
-        } while (choice != 5);
+        } while (choice != 5 && choice < 5);
     }
 
-    private static void viewRooms() {
+    public static void viewRooms() {
         System.out.println("Room Number\tAvailability");
         for (Room room : rooms) {
             System.out.println(room.getRoomNumber() + "\t\t" + (room.isAvailable() ? "Available" : "Not Available"));
         }
     }
 
-    private static void makeReservation() throws ReservationException {
+    public static void makeReservation() throws ReservationException {
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
         System.out.print("Enter the room number you want to reserve: ");
@@ -88,7 +88,7 @@ public class Hotel_room_reservation {
     System.out.println("Reservation made successfully!");
 }
 
-private static void viewReservations() {
+public static void viewReservations() {
     if (reservations.isEmpty()) {
         System.out.println("No reservations found!");
     } else {
@@ -99,7 +99,7 @@ private static void viewReservations() {
     }
 }
 
-private static void cancelReservation() throws ReservationException {
+public static void cancelReservation() throws ReservationException {
     System.out.print("Enter the room number of the reservation you want to cancel: ");
     int roomNumber = scanner.nextInt();
     Reservation reservation = findReservation(roomNumber);
@@ -115,7 +115,7 @@ private static void cancelReservation() throws ReservationException {
     System.out.println("Reservation cancelled successfully!");
 }
 
-private static Room findRoom(int roomNumber) {
+public static Room findRoom(int roomNumber) {
     for (Room room : rooms) {
         if (room.getRoomNumber() == roomNumber) {
             return room;
@@ -124,7 +124,7 @@ private static Room findRoom(int roomNumber) {
     return null;
 }
 
-private static Reservation findReservation(int roomNumber) {
+public static Reservation findReservation(int roomNumber) {
     for (Reservation reservation : reservations) {
         if (reservation.getRoomNumber() == roomNumber) {
             return reservation;
@@ -133,7 +133,7 @@ private static Reservation findReservation(int roomNumber) {
     return null;
 }
 
-private static void saveDataToFile() throws IOException {
+public static void saveDataToFile() throws IOException {
     try (ObjectOutputStream roomsOut = new ObjectOutputStream(new FileOutputStream(ROOMS_FILE_NAME));
          ObjectOutputStream reservationsOut = new ObjectOutputStream(new FileOutputStream(RESERVATIONS_FILE_NAME))) {
         roomsOut.writeObject(rooms);
@@ -142,7 +142,7 @@ private static void saveDataToFile() throws IOException {
     }
 }
 
-private static List<Room> loadRoomsFromFile() throws IOException, ClassNotFoundException {
+public static List<Room> loadRoomsFromFile() throws IOException, ClassNotFoundException {
     File file = new File(ROOMS_FILE_NAME);
     if (!file.exists()) {
         return createRooms();
@@ -152,7 +152,7 @@ private static List<Room> loadRoomsFromFile() throws IOException, ClassNotFoundE
     }
 }
 
-private static List<Reservation> loadReservationsFromFile() throws IOException, ClassNotFoundException {
+public static List<Reservation> loadReservationsFromFile() throws IOException, ClassNotFoundException {
     File file = new File(RESERVATIONS_FILE_NAME);
     if (!file.exists()) {
         return new ArrayList<>();
@@ -162,7 +162,7 @@ private static List<Reservation> loadReservationsFromFile() throws IOException, 
     }
 }
 
-private static List<Room> createRooms() {
+public static List<Room> createRooms() {
     List<Room> rooms = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
         rooms.add(new Room(i));
