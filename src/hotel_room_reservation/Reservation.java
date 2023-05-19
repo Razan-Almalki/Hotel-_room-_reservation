@@ -3,6 +3,7 @@ package hotel_room_reservation;
 import java.io.Serializable;
 
 class Reservation implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private String name;
     private int roomNumber;

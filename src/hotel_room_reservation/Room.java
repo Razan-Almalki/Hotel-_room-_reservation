@@ -3,6 +3,7 @@ package hotel_room_reservation;
 import java.io.Serializable;
 
 class Room implements Serializable {
+
     private int roomNumber;
     private boolean isAvailable;
 
