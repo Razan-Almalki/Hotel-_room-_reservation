@@ -1,20 +1,27 @@
 package hotel_room_reservation;
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.*;
 public class Hotel_room_reservation {
-   private static final String ROOMS_FILE_NAME = "rooms.txt";
-    private static final String RESERVATIONS_FILE_NAME = "reservations.txt";
-    private static List<Room> rooms;
-    private static List<Reservation> reservations;
-    private static Scanner scanner = new Scanner(System.in);
+   public static final String ROOMS_FILE_NAME = "rooms.txt";
+    public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
+    public static List<Room> rooms;
+    public static List<Reservation> reservations;
+    public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        try {
-            rooms = loadRoomsFromFile();
-            reservations = loadReservationsFromFile();
-            displayMenu();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
+        try (ServerSocket server = new ServerSocket(8800)) {
+ System.out.println("Server waiting Connection...");
+            while (true) {
+                // (2) Accept Socket 
+                Socket s = server.accept();
+                Runnable r = new Server_Thread(s);
+                Thread t1 = new Thread(r);
+                t1.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
