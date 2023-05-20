@@ -1,24 +1,21 @@
 package hotel_room_reservation;
-
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.*;
-
 public class Hotel_room_reservation {
-
     public static final String ROOMS_FILE_NAME = "rooms.txt";
     public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
     public static List<Room> rooms;
     public static List<Reservation> reservations;
     public static Scanner scanner = new Scanner(System.in);
-
+       public static ArrayList<Socket> client  = new ArrayList<>();
     public static void main(String[] args) {
         try (ServerSocket server = new ServerSocket(8800)) {
             System.out.println("Server waiting Connection...");
-            while (true) {
-                 
+            while (true) {                 
                 Socket s = server.accept();
+                PrintWriter writer = new PrintWriter(s.getOutputStream(), true);
+                 client.add(s);
                 Runnable r = new Server_Thread(s);
                 Thread t1 = new Thread(r);
                 t1.start();
@@ -27,7 +24,6 @@ public class Hotel_room_reservation {
             e.printStackTrace();
         }
     }
-
     public static void displayMenu() {
         int choice = 0;
         do {
