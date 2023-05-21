@@ -1,21 +1,23 @@
 package hotel_room_reservation;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 public class Hotel_room_reservation {
+
     public static final String ROOMS_FILE_NAME = "rooms.txt";
     public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
     public static List<Room> rooms;
     public static List<Reservation> reservations;
     public static Scanner scanner = new Scanner(System.in);
-       public static ArrayList<Socket> client  = new ArrayList<>();
+
     public static void main(String[] args) {
+        
         try (ServerSocket server = new ServerSocket(8800)) {
             System.out.println("Server waiting Connection...");
-            while (true) {                 
+            while (true) {
                 Socket s = server.accept();
-                PrintWriter writer = new PrintWriter(s.getOutputStream(), true);
-                 client.add(s);
                 Runnable r = new Server_Thread(s);
                 Thread t1 = new Thread(r);
                 t1.start();
@@ -24,18 +26,19 @@ public class Hotel_room_reservation {
             e.printStackTrace();
         }
     }
+
     public static void displayMenu() {
+        
         int choice = 0;
+        
         do {
             System.out.println("1. View Rooms");
             System.out.println("2. Make Reservation");
-            System.out.println("3. View Reservations");
-            System.out.println("4. Cancel Reservation");
-            System.out.println("5. Exit");
+            System.out.println("3. Cancel Reservation");
+            System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
             try {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // consume the newline character
                 switch (choice) {
                     case 1:
                         viewRooms();
@@ -44,29 +47,36 @@ public class Hotel_room_reservation {
                         makeReservation();
                         break;
                     case 3:
-                        viewReservations();
-                        break;
-                    case 4:
                         cancelReservation();
                         break;
-                    case 5:
+                    case 4:
                         saveDataToFile();
                         break;
                     default:
-                        System.out.println("Invalid choice! Try again.");
-                        break;
+                        while(choice >4 || choice <1){
+                        System.out.println("Invalid input!");
+                        displayMenu();
+                        }
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input! Try again.");
-                scanner.nextLine(); // consume the invalid input
+                scanner.nextLine();
+                
             } catch (ReservationException e) {
                 System.out.println("Error: " + e.getMessage());
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
             }
-        } while (choice != 5 && choice < 5);
+        } while (choice != 4 && choice < 4);
     }
-
+    public static List<Room> createRooms() {
+        List<Room> rooms = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            rooms.add(new Room(i));
+        }
+        return rooms;
+    }
+    
     public static void viewRooms() {
         System.out.println("Room Number\tAvailability");
         for (Room room : rooms) {
@@ -93,17 +103,6 @@ public class Hotel_room_reservation {
         room.setAvailable(false);
         Payment(numberOfNights);
         System.out.println("Reservation made successfully!");
-    }
-
-    public static void viewReservations() {
-        if (reservations.isEmpty()) {
-            System.out.println("No reservations found!");
-        } else {
-            System.out.println("Name\tRoom Number\tNumber of Nights");
-            for (Reservation reservation : reservations) {
-                System.out.println(reservation.getName() + "\t" + reservation.getRoomNumber() + "\t\t" + reservation.getNumberOfNights());
-            }
-        }
     }
 
     public static void cancelReservation() throws ReservationException {
@@ -150,32 +149,20 @@ public class Hotel_room_reservation {
     }
 
     public static List<Room> loadRoomsFromFile() throws IOException, ClassNotFoundException {
-        File file = new File(ROOMS_FILE_NAME);
-        if (!file.exists()) {
+      
+      
             return createRooms();
-        }
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
-            return (List<Room>) in.readObject();
-        }
+        
+       
     }
 
     public static List<Reservation> loadReservationsFromFile() throws IOException, ClassNotFoundException {
-        File file = new File(RESERVATIONS_FILE_NAME);
-        if (!file.exists()) {
+       
             return new ArrayList<>();
-        }
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
-            return (List<Reservation>) in.readObject();
-        }
+        
     }
 
-    public static List<Room> createRooms() {
-        List<Room> rooms = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            rooms.add(new Room(i));
-        }
-        return rooms;
-    }
+ 
 
     public static void Payment(int nights) {
         int CostOfOneNight = 350;
