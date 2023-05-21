@@ -86,6 +86,7 @@ public class Hotel_room_reservation {
 
     public static void makeReservation() throws ReservationException {
         System.out.print("Enter your name: ");
+        scanner.nextLine();
         String name = scanner.nextLine();
         System.out.print("Enter the room number you want to reserve: ");
         int roomNumber = scanner.nextInt();
