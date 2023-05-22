@@ -1,11 +1,13 @@
 package hotel_room_reservation;
-
 import java.io.*;
 import java.net.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 public class Hotel_room_reservation {
-
     public static final String ROOMS_FILE_NAME = "rooms.txt";
     public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
     public static List<Room> rooms;
@@ -13,12 +15,35 @@ public class Hotel_room_reservation {
     public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+
+        Connection con = null;
+        try {
+
+            String ConnectionURL = "jdbc:mysql://localhost:3306";
+
+            con = DriverManager.getConnection(ConnectionURL, "Razan", "0559945643");
+
+            Statement st = con.createStatement();
+
+            st.executeUpdate("CREATE DATABASE " + "HotelDatabase");
+
+            System.out.println("1 row(s) affacted");
+
+            con.close();
+        } catch (SQLException s) {
+            System.out.println("SQL statement is not executed!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //////////////////////////////////////////////////////////
         
         try (ServerSocket server = new ServerSocket(8800)) {
             System.out.println("Server waiting Connection...");
             while (true) {
-                Socket s = server.accept();
-                Runnable r = new Server_Thread(s);
+                 
+                Socket so = server.accept();
+                Runnable r = new Server_Thread(so);
                 Thread t1 = new Thread(r);
                 t1.start();
             }
@@ -27,18 +52,19 @@ public class Hotel_room_reservation {
         }
     }
 
+
     public static void displayMenu() {
-        
         int choice = 0;
-        
         do {
             System.out.println("1. View Rooms");
             System.out.println("2. Make Reservation");
-            System.out.println("3. Cancel Reservation");
-            System.out.println("4. Exit");
+            System.out.println("3. View Reservations");
+            System.out.println("4. Cancel Reservation");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
             try {
                 choice = scanner.nextInt();
+                scanner.nextLine(); // consume the newline character
                 switch (choice) {
                     case 1:
                         viewRooms();
@@ -47,36 +73,29 @@ public class Hotel_room_reservation {
                         makeReservation();
                         break;
                     case 3:
-                        cancelReservation();
+                        viewReservations();
                         break;
                     case 4:
+                        cancelReservation();
+                        break;
+                    case 5:
                         saveDataToFile();
                         break;
                     default:
-                        while(choice >4 || choice <1){
-                        System.out.println("Invalid input!");
-                        displayMenu();
-                        }
+                        System.out.println("Invalid choice! Try again.");
+                        break;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input! Try again.");
-                scanner.nextLine();
-                
+                scanner.nextLine(); // consume the invalid input
             } catch (ReservationException e) {
                 System.out.println("Error: " + e.getMessage());
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
             }
-        } while (choice != 4 && choice < 4);
+        } while (choice != 5 && choice < 5);
     }
-    public static List<Room> createRooms() {
-        List<Room> rooms = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            rooms.add(new Room(i));
-        }
-        return rooms;
-    }
-    
+
     public static void viewRooms() {
         System.out.println("Room Number\tAvailability");
         for (Room room : rooms) {
@@ -86,7 +105,6 @@ public class Hotel_room_reservation {
 
     public static void makeReservation() throws ReservationException {
         System.out.print("Enter your name: ");
-        scanner.nextLine();
         String name = scanner.nextLine();
         System.out.print("Enter the room number you want to reserve: ");
         int roomNumber = scanner.nextInt();
@@ -104,6 +122,16 @@ public class Hotel_room_reservation {
         room.setAvailable(false);
         Payment(numberOfNights);
         System.out.println("Reservation made successfully!");
+    }
+public static void viewReservations() {
+        if (reservations.isEmpty()) {
+            System.out.println("No reservations found!");
+        } else {
+            System.out.println("Name\tRoom Number\tNumber of Nights");
+            for (Reservation reservation : reservations) {
+                System.out.println(reservation.getName() + "\t" + reservation.getRoomNumber() + "\t\t" + reservation.getNumberOfNights());
+            }
+        }
     }
 
     public static void cancelReservation() throws ReservationException {
@@ -150,20 +178,32 @@ public class Hotel_room_reservation {
     }
 
     public static List<Room> loadRoomsFromFile() throws IOException, ClassNotFoundException {
-      
-      
+        File file = new File(ROOMS_FILE_NAME);
+        if (!file.exists()) {
             return createRooms();
-        
-       
+        }
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            return (List<Room>) in.readObject();
+        }
     }
 
     public static List<Reservation> loadReservationsFromFile() throws IOException, ClassNotFoundException {
-       
+        File file = new File(RESERVATIONS_FILE_NAME);
+        if (!file.exists()) {
             return new ArrayList<>();
-        
+        }
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            return (List<Reservation>) in.readObject();
+        }
     }
 
- 
+    public static List<Room> createRooms() {
+        List<Room> rooms = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            rooms.add(new Room(i));
+        }
+        return rooms;
+    }
 
     public static void Payment(int nights) {
         int CostOfOneNight = 350;
@@ -185,5 +225,40 @@ public class Hotel_room_reservation {
             System.out.println("Invalid input! Please enter a number.");
             Payment(nights);
         }
+        
+
     }
+    
+    public static void DBStore() {
+        Connection conn = null;
+        Statement s = null;
+        try {
+            String Table = "CREATE TABLE Room "
+                    + "(RoomID INT, "
+                    + "isAvailable BOOL";
+            s = conn.createStatement();
+            s.executeUpdate(Table);
+            
+            String Records = "INSERT INTO Room "
+                    + "(RoomID, isAvailable) VALUES "
+                    + "(101, true), "
+                    + "(102, true), "
+                    + "(103, true), "
+                    + "(104, true), "
+                    + "(105, true), "
+                    + "(106, true), "
+                    + "(107, true), "
+                    + "(108, true), "
+                    + "(109, true), "
+                    + "(110, true) ";
+            
+            s.executeUpdate(Records);
+
+            s.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+        
 }
