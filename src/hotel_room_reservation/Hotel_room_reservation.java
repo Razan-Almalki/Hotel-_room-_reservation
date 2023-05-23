@@ -3,6 +3,8 @@ import java.io.*;
 import java.net.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
@@ -13,30 +15,10 @@ public class Hotel_room_reservation {
     public static List<Room> rooms;
     public static List<Reservation> reservations;
     public static Scanner scanner = new Scanner(System.in);
-
+    public static ObjectOutputStream roomsOut;
+    public static ObjectOutputStream reservationsOut;
+                
     public static void main(String[] args) {
-
-        Connection con = null;
-        try {
-
-            String ConnectionURL = "jdbc:mysql://localhost:3306";
-
-            con = DriverManager.getConnection(ConnectionURL, "Razan", "0559945643");
-
-            Statement st = con.createStatement();
-
-            st.executeUpdate("CREATE DATABASE " + "HotelDatabase");
-
-            System.out.println("1 row(s) affacted");
-
-            con.close();
-        } catch (SQLException s) {
-            System.out.println("SQL statement is not executed!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //////////////////////////////////////////////////////////
         
         try (ServerSocket server = new ServerSocket(8800)) {
             System.out.println("Server waiting Connection...");
@@ -52,78 +34,80 @@ public class Hotel_room_reservation {
         }
     }
 
-
-    public static void displayMenu() {
-        int choice = 0;
-        do {
-            System.out.println("1. View Rooms");
-            System.out.println("2. Make Reservation");
-            System.out.println("3. View Reservations");
-            System.out.println("4. Cancel Reservation");
-            System.out.println("5. Exit");
-            System.out.print("Enter your choice: ");
-            try {
-                choice = scanner.nextInt();
-                scanner.nextLine(); // consume the newline character
-                switch (choice) {
-                    case 1:
-                        viewRooms();
-                        break;
-                    case 2:
-                        makeReservation();
-                        break;
-                    case 3:
-                        viewReservations();
-                        break;
-                    case 4:
-                        cancelReservation();
-                        break;
-                    case 5:
-                        saveDataToFile();
-                        break;
-                    default:
-                        System.out.println("Invalid choice! Try again.");
-                        break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Try again.");
-                scanner.nextLine(); // consume the invalid input
-            } catch (ReservationException e) {
-                System.out.println("Error: " + e.getMessage());
-            } catch (IOException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        } while (choice != 5 && choice < 5);
-    }
-
-    public static void viewRooms() {
+    public static void viewRooms() throws SQLException {
         System.out.println("Room Number\tAvailability");
-        for (Room room : rooms) {
-            System.out.println(room.getRoomNumber() + "\t\t" + (room.isAvailable() ? "Available" : "Not Available"));
-        }
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase","root", "Qazwsx12!");
+            
+            Statement st = con.createStatement();
+            
+            ResultSet result = st.executeQuery("SELECT * FROM Room");
+            
+            while (result.next()) {
+                
+                if (result.getString(2).equalsIgnoreCase("true")) {
+                    
+                    System.out.println(result.getInt(1) + "\t\tAvailable");
+                }
+                else
+                    System.out.println(result.getInt(1) + "\t\tNot Available");
+            }
+            
+            System.out.println("");
+            result.close();
+            st.close();
+            con.close();
     }
 
-    public static void makeReservation() throws ReservationException {
+    public static void makeReservation() throws ReservationException, FileNotFoundException, IOException, SQLException {
+        
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "root", "Qazwsx12!");
+            
+        Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
         System.out.print("Enter the room number you want to reserve: ");
         int roomNumber = scanner.nextInt();
-        Room room = findRoom(roomNumber);
-        if (room == null) {
-            throw new ReservationException("Room " + roomNumber + " not found!");
+        int numberOfNights = 0;
+        
+        ResultSet result = st.executeQuery("SELECT * FROM Room");
+        
+        while (result.next()) {
+            
+            if (roomNumber == result.getInt(1)) {
+                
+                if (result.getString(2).equalsIgnoreCase("true")) {
+                    
+                    System.out.print("Enter the number of nights you want to reserve: ");
+                    numberOfNights = scanner.nextInt();
+                    PreparedStatement preQueryStat_reservation = con.prepareStatement("INSERT INTO Reservation VALUES (?, ?, ?)");
+
+                    preQueryStat_reservation.setString(1, name);
+                    preQueryStat_reservation.setInt(2, roomNumber);
+                    preQueryStat_reservation.setInt(3, numberOfNights);
+
+                    preQueryStat_reservation.executeUpdate();
+                    
+                    preQueryStat_reservation = con.prepareStatement("UPDATE Room SET Availability='false' WHERE ID='" + roomNumber + "'");
+                    
+                    preQueryStat_reservation.executeUpdate();
+                    
+                    Payment(numberOfNights);
+                    System.out.println("Reservation made successfully!");
+                }
+                
+                else
+                    throw new ReservationException("Room " + roomNumber + " is already reserved!");
+            }
+            
+            if (!(roomNumber > 0 && roomNumber < 11)) {
+                
+                throw new ReservationException("Room " + roomNumber + " not found!");
+            }
         }
-        if (!room.isAvailable()) {
-            throw new ReservationException("Room " + roomNumber + " is already reserved!");
-        }
-        System.out.print("Enter the number of nights you want to reserve: ");
-        int numberOfNights = scanner.nextInt();
-        Reservation reservation = new Reservation(name, roomNumber, numberOfNights);
-        reservations.add(reservation);
-        room.setAvailable(false);
-        Payment(numberOfNights);
-        System.out.println("Reservation made successfully!");
     }
-public static void viewReservations() {
+
+    public static void viewReservations() {
         if (reservations.isEmpty()) {
             System.out.println("No reservations found!");
         } else {
@@ -169,15 +153,16 @@ public static void viewReservations() {
     }
 
     public static void saveDataToFile() throws IOException {
-        try (ObjectOutputStream roomsOut = new ObjectOutputStream(new FileOutputStream(ROOMS_FILE_NAME));
-                ObjectOutputStream reservationsOut = new ObjectOutputStream(new FileOutputStream(RESERVATIONS_FILE_NAME))) {
-            roomsOut.writeObject(rooms);
-            reservationsOut.writeObject(reservations);
+        try {
             System.out.println("Data saved to file successfully!");
+        } finally {
+            roomsOut.close();
+            reservationsOut.close();
         }
     }
 
     public static List<Room> loadRoomsFromFile() throws IOException, ClassNotFoundException {
+        
         File file = new File(ROOMS_FILE_NAME);
         if (!file.exists()) {
             return createRooms();
@@ -259,6 +244,5 @@ public static void viewReservations() {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-        
+    }       
 }

@@ -17,7 +17,5 @@ public class Server_Thread implements Runnable {
     public void run() {
         System.out.println("Welcome :)");
         System.out.println("Client connect via: " + incoming.getLocalAddress());
-      
     }
-
 }
