@@ -11,7 +11,7 @@ public class CreateDatabase {
 
             String ConnectionURL = "jdbc:mysql://localhost:3306";
 
-            Connection con = DriverManager.getConnection(ConnectionURL, "root", "Qazwsx12!");
+            Connection con = DriverManager.getConnection(ConnectionURL, "Razan", "0559945643");
 
             Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 

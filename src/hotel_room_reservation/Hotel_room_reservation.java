@@ -40,7 +40,7 @@ public class Hotel_room_reservation {
 
     public static void viewRooms() throws SQLException {
         
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "root", "Qazwsx12!");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
 
         Statement st = con.createStatement();
         
@@ -70,7 +70,7 @@ public class Hotel_room_reservation {
 //        bankLock.lock();
 //        try {
 
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "root", "Qazwsx12!");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
 
             Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
@@ -122,7 +122,7 @@ public class Hotel_room_reservation {
 
     public static void viewReservations() throws SQLException {
         
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "root", "Qazwsx12!");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
             
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             
@@ -157,7 +157,7 @@ public class Hotel_room_reservation {
 
     public static void cancelReservation() throws ReservationException, SQLException {
         
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "root", "Qazwsx12!");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
             
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         
