@@ -1,7 +1,7 @@
 package hotel_room_reservation;
 
-import static hotel_room_reservation.Hotel_room_reservation.loadReservationsFromFile;
-import static hotel_room_reservation.Hotel_room_reservation.loadRoomsFromFile;
+//import static hotel_room_reservation.Hotel_room_reservation.loadReservationsFromFile;
+//import static hotel_room_reservation.Hotel_room_reservation.loadRoomsFromFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
@@ -148,7 +148,11 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void View_ReservationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_View_ReservationsActionPerformed
 
-        Hotel_room_reservation.viewReservations();
+        try {
+            Hotel_room_reservation.viewReservations();
+        } catch (SQLException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_View_ReservationsActionPerformed
 
     private void Cancel_ReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cancel_ReservationActionPerformed
@@ -157,16 +161,18 @@ public class NewJFrame extends javax.swing.JFrame {
             Hotel_room_reservation.cancelReservation();
         } catch (ReservationException ex) {
             System.out.println("Error: " + ex.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_Cancel_ReservationActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
         
-        try {
-            Hotel_room_reservation.saveDataToFile();
-        } catch (IOException ex) {
-            System.out.println("Error: " + ex.getMessage());
-        }
+//        try {
+//            Hotel_room_reservation.saveDataToFile();
+//        } catch (IOException ex) {
+//            System.out.println("Error: " + ex.getMessage());
+//        }
     }//GEN-LAST:event_ExitActionPerformed
 
     public static void main(String args[]) {
@@ -175,13 +181,13 @@ public class NewJFrame extends javax.swing.JFrame {
 //        PrintWriter writer = new PrintWriter(incoming.getOutputStream(), true);
 //        Scanner reader = new Scanner(incoming.getInputStream());
             Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-            Hotel_room_reservation.rooms = loadRoomsFromFile();
-            Hotel_room_reservation.reservations = loadReservationsFromFile();
+//            Hotel_room_reservation.rooms = loadRoomsFromFile();
+//            Hotel_room_reservation.reservations = loadReservationsFromFile();
 //        writer.close();
 //        reader.close();
-        } catch (ClassNotFoundException ex) {
+        } /*catch (ClassNotFoundException ex) {
             ex.printStackTrace();
-        } catch (IOException e) {
+        } */catch (IOException e) {
             e.printStackTrace();
         }
         
