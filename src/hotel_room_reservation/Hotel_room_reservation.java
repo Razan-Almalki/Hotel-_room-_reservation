@@ -54,7 +54,7 @@ public class Hotel_room_reservation {
 
         //System.out.println("Room Number\tAvailability");
         //j.showMessageDialog(null, "Room Number                 Availability");
-        p.add("Room Number                 Availability\n");
+        p.add("    Room Number                 Availability\n");
         p.add("____________________________________\n");
         ResultSet result = st.executeQuery("SELECT * FROM Room");
 
@@ -138,7 +138,7 @@ public class Hotel_room_reservation {
                 }
             }
 
-            if (!(result.getInt(1) > 0 && result.getInt(1) < 11)) {
+            if (!(result.getInt(1) > 100 && result.getInt(1) < 111)) {
                 JOptionPane.showMessageDialog(null, "Room " + result.getInt(1) + " not found!");
                 throw new ReservationException("Room " + result.getInt(1) + " not found!");
             }
@@ -210,7 +210,7 @@ public class Hotel_room_reservation {
 
         ResultSet result = st.executeQuery("SELECT * FROM Reservation WHERE Name = '" + name + "' AND Room_no = " + roomNumber);
 
-        if (result == null) {
+        if (result == null ) {
 
             JOptionPane.showMessageDialog(null, "Reservation not found for room " + roomNumber + "!");
             throw new ReservationException("Reservation not found for room " + roomNumber + "!");

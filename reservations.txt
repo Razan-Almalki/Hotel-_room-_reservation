@@ -43,3 +43,33 @@ Reservation for 5 Nights
 Name of the customer is: Raghad
 Room number is: 8
 Reservation for 2 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: Ruba
+Room number is: 2
+Reservation for 2 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: Ruba
+Room number is: 101
+Reservation for 2 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: Razan
+Room number is: 103
+Reservation for 3 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: Bushra
+Room number is: 110
+Reservation for 4 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: wow
+Room number is: 108
+Reservation for 2 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: Raghad
+Room number is: 106
+Reservation for 3 Nights
