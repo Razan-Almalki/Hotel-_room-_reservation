@@ -8,21 +8,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import javax.swing.JOptionPane;
 //import java.util.concurrent.locks.ReentrantLock;
 
 public class Hotel_room_reservation {
 //    public static final String ROOMS_FILE_NAME = "rooms.txt";
-//    public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
+    public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
 //    public static List<Room> rooms;
-//    public static List<Reservation> reservations;
+    //public static List<Reservation> reservations;
     public static Scanner scanner = new Scanner(System.in);
 //    public static ObjectOutputStream roomsOut;
 //    public static ObjectOutputStream reservationsOut;
 //    private static ReentrantLock bankLock = new ReentrantLock();
+    
+     
 
     public static void main(String[] args) {
         
-        try (ServerSocket server = new ServerSocket(8800)) {
+        try (
+               
+                ServerSocket server = new ServerSocket(8800)) {
             
             System.out.println("Server waiting Connection...");
             while (true) {
@@ -41,21 +46,19 @@ public class Hotel_room_reservation {
     public static void viewRooms() throws SQLException {
         
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
-
         Statement st = con.createStatement();
-        
+        JOptionPane j = new JOptionPane();
         System.out.println("Room Number\tAvailability");
-        
+        j.showMessageDialog(null, "Room Number                 Availability");
         ResultSet result = st.executeQuery("SELECT * FROM Room");
-        
         while (result.next()) {
-
             if (result.getString(2).equalsIgnoreCase("true")) {
-
                 System.out.println(result.getInt(1) + "\t\tAvailable");
+                j.showMessageDialog(null, result.getInt(1) + "\t\tAvailable");
+
             } else {
-                
                 System.out.println(result.getInt(1) + "\t\tNot Available");
+                j.showMessageDialog(null, result.getInt(1) + "\t\tNot Available");
             }
         }
 
@@ -69,7 +72,8 @@ public class Hotel_room_reservation {
 //        
 //        bankLock.lock();
 //        try {
-
+  PrintWriter Writer =new PrintWriter(new FileWriter(RESERVATIONS_FILE_NAME));
+  Writer.println("--------------RESERVATIONS REPORT--------------");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
 
             Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -95,7 +99,6 @@ public class Hotel_room_reservation {
                         preQueryStat.setString(1, name);
                         preQueryStat.setInt(2, roomNumber);
                         preQueryStat.setInt(3, numberOfNights);
-
                         preQueryStat.executeUpdate();
 
                         preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'false' WHERE ID = ?");
@@ -104,6 +107,8 @@ public class Hotel_room_reservation {
 
                         Payment(numberOfNights);
                         System.out.println("Reservation made successfully!");
+     Writer.println("\nName of the customer is: "+name+"\nRoom number is: "+roomNumber+"\nReservation for "+numberOfNights+" Nights");
+                         Writer.flush();
                     } else {
                         
                         throw new ReservationException("Room " + roomNumber + " is already reserved!");
@@ -125,7 +130,7 @@ public class Hotel_room_reservation {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
             
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            
+           scanner.nextLine();
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
         
