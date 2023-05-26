@@ -11,7 +11,7 @@ public class Create_table {
     public static void main(String[] args) {
         
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", Hotel_room_reservation.host, Hotel_room_reservation.passWord);
             
             Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             

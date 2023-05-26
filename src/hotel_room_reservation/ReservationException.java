@@ -1,8 +1,11 @@
 package hotel_room_reservation;
+
 class ReservationException extends Exception {
- public ReservationException() {
+
+    public ReservationException() {
         super();
     }
+
     public ReservationException(String message) {
         super(message);
     }

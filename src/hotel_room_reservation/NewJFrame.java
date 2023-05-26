@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -18,11 +19,11 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 8800;
-    
+
     public NewJFrame() {
         initComponents();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -86,7 +87,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\razan\\Documents\\NetBeansProjects\\Hotel_room_reservation\\Screenshot 2023-05-23 075236.png")); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\Backup\\Users\\Roby\\Documents\\NetBeansProjects\\Hotel_room_reservation\\Screenshot 2023-05-23 075236.png")); // NOI18N
         jLabel1.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -132,12 +133,10 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void View_RoomsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_View_RoomsActionPerformed
- try {
+        try {
             Hotel_room_reservation.viewRooms();
-//          view v=new view();
-//          v.show();
         } catch (SQLException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_View_RoomsActionPerformed
 
@@ -148,9 +147,9 @@ public class NewJFrame extends javax.swing.JFrame {
         } catch (ReservationException ex) {
             System.out.println("Error: " + ex.getMessage());
         } catch (SQLException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_Make_ReservationActionPerformed
 
@@ -159,7 +158,7 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             Hotel_room_reservation.viewReservations();
         } catch (SQLException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_View_ReservationsActionPerformed
 
@@ -170,20 +169,20 @@ public class NewJFrame extends javax.swing.JFrame {
         } catch (ReservationException ex) {
             System.out.println("Error: " + ex.getMessage());
         } catch (SQLException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_Cancel_ReservationActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
-        
-      //  Hotel_room_reservation.saveDataToFile();
-        JOptionPane.showMessageDialog(null,"Thank u ...");
+
+        //  Hotel_room_reservation.saveDataToFile();
+        JOptionPane.showMessageDialog(null, "Thank You! visit us soon ...");
         System.exit(0);
-        
+
     }//GEN-LAST:event_ExitActionPerformed
 
     public static void main(String args[]) {
-        
+
         try {
 //        PrintWriter writer = new PrintWriter(incoming.getOutputStream(), true);
 //        Scanner reader = new Scanner(incoming.getInputStream());
@@ -194,10 +193,10 @@ public class NewJFrame extends javax.swing.JFrame {
 //        reader.close();
         } /*catch (ClassNotFoundException ex) {
             ex.printStackTrace();
-        } */catch (IOException e) {
+        } */ catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new NewJFrame().setVisible(true);

@@ -38,3 +38,8 @@ Reservation for 3 Nights
 Name of the customer is: jimin
 Room number is: 5
 Reservation for 5 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: Raghad
+Room number is: 8
+Reservation for 2 Nights
