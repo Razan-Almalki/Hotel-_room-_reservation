@@ -72,17 +72,19 @@ public class Hotel_room_reservation {
 //        
 //        bankLock.lock();
 //        try {
-  PrintWriter Writer =new PrintWriter(new FileWriter(RESERVATIONS_FILE_NAME));
+  PrintWriter Writer =new PrintWriter(new FileWriter(RESERVATIONS_FILE_NAME ,true));
   Writer.println("--------------RESERVATIONS REPORT--------------");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
 
             Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
-            System.out.print("Enter your name: ");
-            String name = scanner.nextLine();
-            System.out.print("Enter the room number you want to reserve: ");
-            int roomNumber = scanner.nextInt();
-            int numberOfNights = 0;
+String name=JOptionPane.showInputDialog("Enter your name: ");
+           // System.out.print("Enter your name: ");
+           // String name = scanner.nextLine();
+           String roomNumberstring=JOptionPane.showInputDialog("Enter the room number you want to reserve: ");
+           int roomNumber =Integer.parseInt(roomNumberstring);
+            //System.out.print("Enter the room number you want to reserve: ");
+           // int roomNumber = scanner.nextInt();
+          //  int numberOfNights = 0;
 
             ResultSet result = st.executeQuery("SELECT * FROM Room");
 
@@ -91,9 +93,10 @@ public class Hotel_room_reservation {
                 if (roomNumber == result.getInt(1)) {
 
                     if (result.getString(2).equalsIgnoreCase("true")) {
-
-                        System.out.print("Enter the number of nights you want to reserve: ");
-                        numberOfNights = scanner.nextInt();
+String numberOfNightsString=JOptionPane.showInputDialog("Enter the number of nights you want to reserve: ");
+  int numberOfNights =Integer.parseInt(numberOfNightsString);
+                       // System.out.print("Enter the number of nights you want to reserve: ");
+                       // numberOfNights = scanner.nextInt();
                         PreparedStatement preQueryStat = con.prepareStatement("INSERT INTO Reservation VALUES (?, ?, ?)");
 
                         preQueryStat.setString(1, name);
@@ -106,17 +109,19 @@ public class Hotel_room_reservation {
                         preQueryStat.executeUpdate();
 
                         Payment(numberOfNights);
-                        System.out.println("Reservation made successfully!");
+                        JOptionPane.showMessageDialog(null,"Reservation made successfully!");
+                       // System.out.println("Reservation made successfully!");
      Writer.println("\nName of the customer is: "+name+"\nRoom number is: "+roomNumber+"\nReservation for "+numberOfNights+" Nights");
                          Writer.flush();
                     } else {
-                        
+                         JOptionPane.showMessageDialog(null,"Room " + roomNumber + " is already reserved!");
                         throw new ReservationException("Room " + roomNumber + " is already reserved!");
+                        
                     }
                 }
 
                 if (!(result.getInt(1) > 0 && result.getInt(1) < 11)) {
-
+                   JOptionPane.showMessageDialog(null,"Room " + result.getInt(1) + " not found!");
                     throw new ReservationException("Room " + result.getInt(1) + " not found!");
                 }
             }
@@ -130,9 +135,9 @@ public class Hotel_room_reservation {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
             
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-           scanner.nextLine();
-        System.out.print("Enter your name: ");
-        String name = scanner.nextLine();
+        String name=JOptionPane.showInputDialog("Enter your name: ");
+       // System.out.print("Enter your name: ");
+       // String name = scanner.nextLine();
         
         PreparedStatement preQueryStat = con.prepareStatement("SELECT * FROM Reservation WHERE name = ?");
         preQueryStat.setString(1, name);
@@ -140,16 +145,19 @@ public class Hotel_room_reservation {
         ResultSet result = preQueryStat.executeQuery();
         
         if (result == null) {
-            
-            System.out.println("No reservations found!");
+            JOptionPane.showMessageDialog(null,"No reservations found!");
+           // System.out.println("No reservations found!");
         } 
         
         else {
-            
+            //JOptionPane.showMessageDialog(null,"Name\tRoom Number\tNumber of Days");
             System.out.println("Name\tRoom Number\tNumber of Days");
             
             while(result.next()) {
                 
+//                JOptionPane.showMessageDialog(null,result.getString(1) + "\t");
+//                 JOptionPane.showMessageDialog(null,result.getString(2) + "\t\t");
+//                  JOptionPane.showMessageDialog(null,result.getString(3) );
                 System.out.print(result.getString(1) + "\t"); 
                 System.out.print(result.getInt(2) + "\t\t");
                 System.out.print(result.getInt(3)); 
@@ -165,17 +173,19 @@ public class Hotel_room_reservation {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", "Razan", "0559945643");
             
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        
-        System.out.print("Enter your name: ");
-        String name = scanner.nextLine();
-        
-        System.out.print("Enter the room number of the reservation you want to cancel: ");
-        int roomNumber = scanner.nextInt();
+        String name=JOptionPane.showInputDialog("Enter your name: ");
+        //System.out.print("Enter your name: ");
+        //String name = scanner.nextLine();
+         String roomNumberString=JOptionPane.showInputDialog("Enter the room number of the reservation you want to cancel: ");
+           int roomNumber =Integer.parseInt(roomNumberString);
+        //System.out.print("Enter the room number of the reservation you want to cancel: ");
+       // int roomNumber = scanner.nextInt();
         
         ResultSet result = st.executeQuery("SELECT * FROM Reservation WHERE Name = '" + name + "' AND Room_no = " + roomNumber);
         
         if (result == null) {
-            
+         
+      JOptionPane.showMessageDialog(null,"Reservation not found for room " + roomNumber + "!");
             throw new ReservationException("Reservation not found for room " + roomNumber + "!");
         } else {
             
@@ -186,7 +196,8 @@ public class Hotel_room_reservation {
             preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'true' WHERE ID = ?");
             preQueryStat.setInt(1, roomNumber);
             preQueryStat.executeUpdate();
-            System.out.println("Reservation cancelled successfully!");
+            JOptionPane.showMessageDialog(null,"Reservation cancelled successfully!");
+            //System.out.println("Reservation cancelled successfully!");
         }
         
         
@@ -251,11 +262,13 @@ public class Hotel_room_reservation {
             amount = CostOfOneNight;
         }
         
-        System.out.print("The amount of payment is (" + amount + ") Ryal: ");
+       // System.out.print("The amount of payment is (" + amount + ") Ryal: ");
+        String payment=JOptionPane.showInputDialog("The amount of payment is (" + amount + ") Ryal: ");
+          int pay =Integer.parseInt(payment);
         try {
             
-            Scanner scanner = new Scanner(System.in);
-            int pay = scanner.nextInt();
+            //Scanner scanner = new Scanner(System.in);
+            //int pay = scanner.nextInt();
             if (pay <= 0 || pay != amount) {
                 
                 System.out.println("You entered the wrong amount! Please try again.");

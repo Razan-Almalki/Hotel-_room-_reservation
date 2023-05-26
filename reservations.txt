@@ -1,5 +1,40 @@
 --------------RESERVATIONS REPORT--------------
 
-Name of the customer is: waad
-Room number is: 9
-Reservation for 9 Nights
+Name of the customer is: ran
+Room number is: 6
+Reservation for 3 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: bushra
+Room number is: 7
+Reservation for 7 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: rahaf
+Room number is: 8
+Reservation for 8 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: tete
+Room number is: 10
+Reservation for 10 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: razan
+Room number is: 1
+Reservation for 1 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: wee
+Room number is: 1
+Reservation for 1 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: you
+Room number is: 3
+Reservation for 3 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: jimin
+Room number is: 5
+Reservation for 5 Nights
