@@ -131,6 +131,7 @@ public class Hotel_room_reservation {
                 throw new ReservationException("Room " + roomNumber + " not found!");
             }
         }
+        Writer.close();
 
     }
 
