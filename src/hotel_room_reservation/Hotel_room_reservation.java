@@ -10,8 +10,8 @@ public class Hotel_room_reservation {
 
     public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
     public static Scanner scanner = new Scanner(System.in);
-    public static String host = "Ruba";
-    public static String passWord = "Ruba20";
+    public static String host = "Razan";
+    public static String passWord = "0559945643";
 
     public static void main(String[] args) {
 
