@@ -218,6 +218,7 @@ public class Hotel_room_reservation {
             JOptionPane.showMessageDialog(null, "Reservation cancelled successfully!");
 
         }
+        Writer.close();
 
     }
 
