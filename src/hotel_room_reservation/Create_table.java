@@ -2,7 +2,6 @@ package hotel_room_reservation;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Create_table {
 
@@ -43,8 +42,8 @@ public class Create_table {
             st.close();
             con.close();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            e.getMessage();
         }
     }
 

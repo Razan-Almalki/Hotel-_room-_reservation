@@ -1,6 +1,5 @@
 package hotel_room_reservation;
 
-import java.io.*;
 import java.sql.*;
 
 public class CreateDatabase {
@@ -22,11 +21,9 @@ public class CreateDatabase {
             con.close();
 
         } catch (SQLException s) {
-            //s.printStackTrace();
-            System.out.println("SQL statement is not executed!");
+            s.getMessage();
         } catch (Exception e) {
-
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 }

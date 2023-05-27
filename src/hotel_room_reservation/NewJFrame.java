@@ -1,20 +1,9 @@
 package hotel_room_reservation;
 
-//import static hotel_room_reservation.Hotel_room_reservation.loadReservationsFromFile;
-//import static hotel_room_reservation.Hotel_room_reservation.loadRoomsFromFile;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import java.lang.NumberFormatException;
 
 public class NewJFrame extends javax.swing.JFrame {
 
@@ -137,7 +126,7 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             Hotel_room_reservation.viewRooms();
         } catch (SQLException ex) {
-            System.out.println("Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_View_RoomsActionPerformed
 
@@ -146,11 +135,11 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             Hotel_room_reservation.makeReservation();
         } catch (ReservationException ex) {
-            System.out.println("Error: " + ex.getMessage());
+            ex.getMessage();
         } catch (SQLException ex) {
-            System.out.println("Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         } catch (IOException ex) {
-            System.out.println("Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_Make_ReservationActionPerformed
 
@@ -159,7 +148,7 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             Hotel_room_reservation.viewReservations();
         } catch (SQLException ex) {
-            System.out.println("Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_View_ReservationsActionPerformed
 
@@ -168,15 +157,14 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             Hotel_room_reservation.cancelReservation();
         } catch (ReservationException ex) {
-            System.out.println("Error: " + ex.getMessage());
+            ex.getMessage();
         } catch (SQLException ex) {
-            System.out.println("Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_Cancel_ReservationActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
 
-        //  Hotel_room_reservation.saveDataToFile();
         JOptionPane.showMessageDialog(null, "Thank You! visit us soon ...");
         System.exit(0);
 
@@ -185,17 +173,11 @@ public class NewJFrame extends javax.swing.JFrame {
     public static void main(String args[]) {
 
         try {
-//        PrintWriter writer = new PrintWriter(incoming.getOutputStream(), true);
-//        Scanner reader = new Scanner(incoming.getInputStream());
+
             Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-//            Hotel_room_reservation.rooms = loadRoomsFromFile();
-//            Hotel_room_reservation.reservations = loadReservationsFromFile();
-//        writer.close();
-//        reader.close();
-        } /*catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } */ catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
