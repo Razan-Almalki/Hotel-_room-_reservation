@@ -4,14 +4,17 @@ import java.io.*;
 import java.net.*;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Hotel_room_reservation {
 
     public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
     public static Scanner scanner = new Scanner(System.in);
-    public static String host = "Ruba";
-    public static String passWord = "Ruba20";
+    public static String host = "Razan";
+    public static String passWord = "0559945643";
+    
 
     public static void main(String[] args) {
 
@@ -35,6 +38,7 @@ public class Hotel_room_reservation {
 
     public static void viewRooms() throws SQLException {
 
+        // Establish a connection to the database
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", host, passWord);
         Statement st = con.createStatement();
         ResultSet result = st.executeQuery("SELECT * FROM Room");
@@ -60,8 +64,10 @@ public class Hotel_room_reservation {
             total += element;
         }
 
+        // Display the room availability information
         JOptionPane.showMessageDialog(null, total);
 
+        // Close the database connections and result set
         result.close();
         st.close();
         con.close();
@@ -69,9 +75,11 @@ public class Hotel_room_reservation {
 
     public static void makeReservation() throws ReservationException, FileNotFoundException, IOException, SQLException {
 
+        // Create a PrintWriter to write reservation details to a file
         PrintWriter Writer = new PrintWriter(new FileWriter(RESERVATIONS_FILE_NAME, true));
         Writer.println("--------------RESERVATIONS REPORT--------------");
 
+        // Establish a connection to the database
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", host, passWord);
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
@@ -89,6 +97,7 @@ public class Hotel_room_reservation {
                     String numberOfNightsString = JOptionPane.showInputDialog("Enter the number of nights you want to reserve: ");
                     int numberOfNights = Integer.parseInt(numberOfNightsString);
 
+                    // Insert reservation details into the database
                     PreparedStatement preQueryStat = con.prepareStatement("INSERT INTO Reservation VALUES (?, ?, ?)");
 
                     preQueryStat.setString(1, name);
@@ -96,13 +105,16 @@ public class Hotel_room_reservation {
                     preQueryStat.setInt(3, numberOfNights);
                     preQueryStat.executeUpdate();
 
+                    // Update the room availability in the database
                     preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'false' WHERE ID = ?");
                     preQueryStat.setInt(1, roomNumber);
                     preQueryStat.executeUpdate();
 
+                    // Process payment for the reservation
                     Payment(numberOfNights);
                     JOptionPane.showMessageDialog(null, "Reservation made successfully!");
 
+                    // Write reservation details to the reservations file
                     Writer.println("\nName of the customer is: " + name + "\nRoom number is: " + roomNumber + "\nReservation for " + numberOfNights + " Nights");
                     Writer.flush();
 
@@ -124,11 +136,13 @@ public class Hotel_room_reservation {
 
     public static void viewReservations() throws SQLException {
 
+        // Establish a connection to the database
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", host, passWord);
 
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String name = JOptionPane.showInputDialog("Enter your name: ");
 
+        // Retrieve reservations for the given name from the database
         PreparedStatement preQueryStat = con.prepareStatement("SELECT * FROM Reservation WHERE name = ?");
         preQueryStat.setString(1, name);
 
@@ -147,6 +161,7 @@ public class Hotel_room_reservation {
 
         if (s0 == null) {
             JOptionPane.showMessageDialog(null, "No reservations found!");
+            
 
         } else {
 
@@ -155,14 +170,18 @@ public class Hotel_room_reservation {
                 total += element;
             }
 
+            // Display the reservations for the given name
             JOptionPane.showMessageDialog(null, total);
 
         }
 
     }
 
-    public static void cancelReservation() throws ReservationException, SQLException {
-
+    public static void cancelReservation() throws ReservationException, SQLException, IOException {
+        
+            PrintWriter Writer = new PrintWriter(new FileWriter(RESERVATIONS_FILE_NAME, true));
+        
+        // Establish a connection to the database
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", host, passWord);
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
@@ -183,11 +202,15 @@ public class Hotel_room_reservation {
 
         } else {
 
+            // Delete the reservation from the database
             PreparedStatement preQueryStat = con.prepareStatement("DELETE FROM Reservation WHERE Name = ? AND Room_no = ?");
             preQueryStat.setString(1, name);
             preQueryStat.setInt(2, roomNumber);
             preQueryStat.executeUpdate();
-
+            
+            Writer.println("\nThe room number " + roomNumber + " of the customer " + name + " has been canceled.");
+            Writer.flush();
+            // Update the room availability in the database
             preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'true' WHERE ID = ?");
             preQueryStat.setInt(1, roomNumber);
             preQueryStat.executeUpdate();

@@ -1,10 +1,11 @@
 package hotel_room_reservation;
 
-import java.io.Serializable;
+/*The class has three private fields:
+name (customer's name), roomNumber (room number for the reservation)
+and numberOfNights (number of nights for the reservation) */
 
-class Reservation implements Serializable {
+class Reservation {
 
-    private static final long serialVersionUID = 1L;
     private String name;
     private int roomNumber;
     private int numberOfNights;

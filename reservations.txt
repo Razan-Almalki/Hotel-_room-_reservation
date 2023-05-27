@@ -103,3 +103,30 @@ Reservation for 4 Nights
 Name of the customer is: sh
 Room number is: 105
 Reservation for 2 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: r
+Room number is: 101
+Reservation for 1 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: tt
+Room number is: 102
+Reservation for 2 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: ee
+Room number is: 103
+Reservation for 1 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: wa
+Room number is: 102
+Reservation for 1 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: sushi
+Room number is: 104
+Reservation for 4 Nights
+
+The room number 104 of the customer sushi has been canceled.
