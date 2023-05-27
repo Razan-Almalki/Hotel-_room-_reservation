@@ -130,3 +130,22 @@ Room number is: 104
 Reservation for 4 Nights
 
 The room number 104 of the customer sushi has been canceled.
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: raghad
+Room number is: 109
+Reservation for 3 Nights
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: nichi
+Room number is: 110
+Reservation for 1 Nights
+
+The room number 110 of the customer nichi has been canceled.
+--------------RESERVATIONS REPORT--------------
+
+Name of the customer is: Akira
+Room number is: 110
+Reservation for 2 Nights
+
+The room number 110 of the customer akira has been canceled.

@@ -1,4 +1,5 @@
 package hotel_room_reservation;
+
 /*This class represents a hotel room. It has two private fields: roomNumber (representing the room number) 
 and isAvailable (representing the availability status of the room). 
 The constructor initializes the room number and sets the availability status to true by default.
@@ -11,7 +12,7 @@ class Room {
 
     public Room(int roomNumber) {
         this.roomNumber = roomNumber;
-      
+
     }
 
     public int getRoomNumber() {

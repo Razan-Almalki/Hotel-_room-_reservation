@@ -3,8 +3,6 @@ package hotel_room_reservation;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class NewJFrame extends javax.swing.JFrame {
@@ -79,7 +77,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\razan\\Documents\\NetBeansProjects\\Hotel_room_reservation\\Screenshot 2023-05-23 075236.png")); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\Backup\\Users\\Roby\\Documents\\NetBeansProjects\\Hotel_room_reservation\\Screenshot 2023-05-23 075236.png")); // NOI18N
         jLabel1.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -133,7 +131,9 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_View_RoomsActionPerformed
 
     private void Make_ReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Make_ReservationActionPerformed
-
+        if (JOptionPane.CANCEL_OPTION == 0) {
+            System.exit(0);
+        }
         try {
             Hotel_room_reservation.makeReservation();
         } catch (ReservationException ex) {
@@ -146,7 +146,9 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Make_ReservationActionPerformed
 
     private void View_ReservationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_View_ReservationsActionPerformed
-
+        if (JOptionPane.CANCEL_OPTION == 0) {
+            System.exit(0);
+        }
         try {
             Hotel_room_reservation.viewReservations();
         } catch (SQLException ex) {
@@ -155,7 +157,9 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_View_ReservationsActionPerformed
 
     private void Cancel_ReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cancel_ReservationActionPerformed
-
+        if (JOptionPane.CANCEL_OPTION == 0) {
+            System.exit(0);
+        }
         try {
             Hotel_room_reservation.cancelReservation();
         } catch (ReservationException ex) {
@@ -163,8 +167,10 @@ public class NewJFrame extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         } catch (IOException ex) {
-           JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
+
+
     }//GEN-LAST:event_Cancel_ReservationActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
@@ -179,7 +185,6 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
 
             Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-            
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());

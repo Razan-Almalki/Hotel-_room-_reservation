@@ -3,7 +3,6 @@ package hotel_room_reservation;
 /*The class has three private fields:
 name (customer's name), roomNumber (room number for the reservation)
 and numberOfNights (number of nights for the reservation) */
-
 class Reservation {
 
     private String name;

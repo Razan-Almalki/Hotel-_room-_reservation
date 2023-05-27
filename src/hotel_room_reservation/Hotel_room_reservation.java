@@ -4,17 +4,14 @@ import java.io.*;
 import java.net.*;
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Hotel_room_reservation {
 
     public static final String RESERVATIONS_FILE_NAME = "reservations.txt";
     public static Scanner scanner = new Scanner(System.in);
-    public static String host = "Razan";
-    public static String passWord = "0559945643";
-    
+    public static String host = "Ruba";
+    public static String passWord = "Ruba20";
 
     public static void main(String[] args) {
 
@@ -84,55 +81,59 @@ public class Hotel_room_reservation {
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
         String name = JOptionPane.showInputDialog("Enter your name: ");
-        String roomNumberstring = JOptionPane.showInputDialog("Enter the room number you want to reserve: ");
-        int roomNumber = Integer.parseInt(roomNumberstring);
+        try {
+            String roomNumberstring = JOptionPane.showInputDialog("Enter the room number you want to reserve: ");
+            int roomNumber = Integer.parseInt(roomNumberstring);
 
-        ResultSet result = st.executeQuery("SELECT * FROM Room");
+            ResultSet result = st.executeQuery("SELECT * FROM Room");
 
-        while (result.next()) {
+            while (result.next()) {
 
-            if (roomNumber == result.getInt(1)) {
+                if (roomNumber == result.getInt(1)) {
 
-                if (result.getString(2).equalsIgnoreCase("true")) {
-                    String numberOfNightsString = JOptionPane.showInputDialog("Enter the number of nights you want to reserve: ");
-                    int numberOfNights = Integer.parseInt(numberOfNightsString);
+                    if (result.getString(2).equalsIgnoreCase("true")) {
+                        String numberOfNightsString = JOptionPane.showInputDialog("Enter the number of nights you want to reserve: ");
+                        int numberOfNights = Integer.parseInt(numberOfNightsString);
 
-                    // Insert reservation details into the database
-                    PreparedStatement preQueryStat = con.prepareStatement("INSERT INTO Reservation VALUES (?, ?, ?)");
+                        // Insert reservation details into the database
+                        PreparedStatement preQueryStat = con.prepareStatement("INSERT INTO Reservation VALUES (?, ?, ?)");
 
-                    preQueryStat.setString(1, name);
-                    preQueryStat.setInt(2, roomNumber);
-                    preQueryStat.setInt(3, numberOfNights);
-                    preQueryStat.executeUpdate();
+                        preQueryStat.setString(1, name);
+                        preQueryStat.setInt(2, roomNumber);
+                        preQueryStat.setInt(3, numberOfNights);
+                        preQueryStat.executeUpdate();
 
-                    // Update the room availability in the database
-                    preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'false' WHERE ID = ?");
-                    preQueryStat.setInt(1, roomNumber);
-                    preQueryStat.executeUpdate();
+                        // Update the room availability in the database
+                        preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'false' WHERE ID = ?");
+                        preQueryStat.setInt(1, roomNumber);
+                        preQueryStat.executeUpdate();
 
-                    // Process payment for the reservation
-                    Payment(numberOfNights);
-                    JOptionPane.showMessageDialog(null, "Reservation made successfully!");
+                        // Process payment for the reservation
+                        Payment(numberOfNights);
+                        JOptionPane.showMessageDialog(null, "Reservation made successfully!");
 
-                    // Write reservation details to the reservations file
-                    Writer.println("\nName of the customer is: " + name + "\nRoom number is: " + roomNumber + "\nReservation for " + numberOfNights + " Nights");
-                    Writer.flush();
+                        // Write reservation details to the reservations file
+                        Writer.println("\nName of the customer is: " + name + "\nRoom number is: " + roomNumber + "\nReservation for " + numberOfNights + " Nights");
+                        Writer.flush();
 
-                } else {
-                    JOptionPane.showMessageDialog(null, "Room " + roomNumber + " is already reserved!");
-                    throw new ReservationException("Room " + roomNumber + " is already reserved!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Room " + roomNumber + " is already reserved!");
+                        throw new ReservationException("Room " + roomNumber + " is already reserved!");
+
+                    }
 
                 }
 
+                if (!(roomNumber > 100 && roomNumber < 111)) {
+                    JOptionPane.showMessageDialog(null, "Room " + roomNumber + " not found!");
+                    throw new ReservationException("Room " + roomNumber + " not found!");
+                }
             }
+            Writer.close();
 
-            if (!(roomNumber > 100 && roomNumber < 111)) {
-                JOptionPane.showMessageDialog(null, "Room " + roomNumber + " not found!");
-                throw new ReservationException("Room " + roomNumber + " not found!");
-            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid input!");
         }
-        Writer.close();
-
     }
 
     public static void viewReservations() throws SQLException {
@@ -162,7 +163,6 @@ public class Hotel_room_reservation {
 
         if (s0 == null) {
             JOptionPane.showMessageDialog(null, "No reservations found!");
-            
 
         } else {
 
@@ -179,48 +179,50 @@ public class Hotel_room_reservation {
     }
 
     public static void cancelReservation() throws ReservationException, SQLException, IOException {
-        
-            PrintWriter Writer = new PrintWriter(new FileWriter(RESERVATIONS_FILE_NAME, true));
-        
+
+        PrintWriter Writer = new PrintWriter(new FileWriter(RESERVATIONS_FILE_NAME, true));
+
         // Establish a connection to the database
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/HotelDatabase", host, passWord);
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        try {
+            String name = JOptionPane.showInputDialog("Enter your name: ");
+            String roomNumberString = JOptionPane.showInputDialog("Enter the room number of the reservation you want to cancel: ");
+            int roomNumber = Integer.parseInt(roomNumberString);
 
-        String name = JOptionPane.showInputDialog("Enter your name: ");
-        String roomNumberString = JOptionPane.showInputDialog("Enter the room number of the reservation you want to cancel: ");
-        int roomNumber = Integer.parseInt(roomNumberString);
+            ResultSet result = st.executeQuery("SELECT * FROM Reservation WHERE Name = '" + name + "' AND Room_no = " + roomNumber);
 
-        ResultSet result = st.executeQuery("SELECT * FROM Reservation WHERE Name = '" + name + "' AND Room_no = " + roomNumber);
+            String s0 = null;
+            while (result.next()) {
+                s0 = result.getString(1);
+            }
 
-        String s0 = null;
-        while (result.next()) {
-            s0 = result.getString(1);
+            if (s0 == null) {
+                JOptionPane.showMessageDialog(null, "Reservation not found for room " + roomNumber + "!");
+                throw new ReservationException("Reservation not found for room " + roomNumber + "!");
+
+            } else {
+
+                // Delete the reservation from the database
+                PreparedStatement preQueryStat = con.prepareStatement("DELETE FROM Reservation WHERE Name = ? AND Room_no = ?");
+                preQueryStat.setString(1, name);
+                preQueryStat.setInt(2, roomNumber);
+                preQueryStat.executeUpdate();
+
+                Writer.println("\nThe room number " + roomNumber + " of the customer " + name + " has been canceled.");
+                Writer.flush();
+                // Update the room availability in the database
+                preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'true' WHERE ID = ?");
+                preQueryStat.setInt(1, roomNumber);
+                preQueryStat.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Reservation cancelled successfully!");
+
+            }
+            Writer.close();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid input!");
         }
-
-        if (s0 == null) {
-            JOptionPane.showMessageDialog(null, "Reservation not found for room " + roomNumber + "!");
-            throw new ReservationException("Reservation not found for room " + roomNumber + "!");
-
-        } else {
-
-            // Delete the reservation from the database
-            PreparedStatement preQueryStat = con.prepareStatement("DELETE FROM Reservation WHERE Name = ? AND Room_no = ?");
-            preQueryStat.setString(1, name);
-            preQueryStat.setInt(2, roomNumber);
-            preQueryStat.executeUpdate();
-            
-            Writer.println("\nThe room number " + roomNumber + " of the customer " + name + " has been canceled.");
-            Writer.flush();
-            // Update the room availability in the database
-            preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'true' WHERE ID = ?");
-            preQueryStat.setInt(1, roomNumber);
-            preQueryStat.executeUpdate();
-
-            JOptionPane.showMessageDialog(null, "Reservation cancelled successfully!");
-
-        }
-        Writer.close();
-
     }
 
     public static void Payment(int nights) {
