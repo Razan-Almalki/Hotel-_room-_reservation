@@ -12,7 +12,7 @@ public class Hotel_room_reservation {
     public static Scanner scanner = new Scanner(System.in);
     public static String host = "Razan";
     public static String passWord = "0559945643";
-
+    File f = new File("client.txt");
     public static void main(String[] args) {
 
         try (
@@ -115,7 +115,8 @@ public class Hotel_room_reservation {
                         // Write reservation details to the reservations file
                         Writer.println("\nName of the customer is: " + name + "\nRoom number is: " + roomNumber + "\nReservation for " + numberOfNights + " Nights");
                         Writer.flush();
-
+                        EachUserRE(name,roomNumber, numberOfNights);              
+                        
                     } else {
                         JOptionPane.showMessageDialog(null, "Room " + roomNumber + " is already reserved!");
                         throw new ReservationException("Room " + roomNumber + " is already reserved!");
@@ -215,7 +216,7 @@ public class Hotel_room_reservation {
                 preQueryStat = con.prepareStatement("UPDATE Room SET Availability = 'true' WHERE ID = ?");
                 preQueryStat.setInt(1, roomNumber);
                 preQueryStat.executeUpdate();
-
+EachUserCan( name, roomNumber);
                 JOptionPane.showMessageDialog(null, "Reservation cancelled successfully!");
 
             }
@@ -255,4 +256,20 @@ public class Hotel_room_reservation {
             Payment(nights);
         }
     }
+    public static void EachUserRE(String name, int roomNumber, int nights) throws IOException {
+        PrintWriter Writer1 = new PrintWriter(new FileWriter(name, true));
+        Writer1.println("\nName of the customer is: " + name + "\nRoom number is: " + roomNumber + "\nReservation for " + nights + " Nights");
+        Writer1.close();
+        JOptionPane.showMessageDialog(null, "File invoice is available!");
+        
+    }
+        public static void EachUserCan(String name, int roomNumber) throws IOException {
+        PrintWriter Writer1 = new PrintWriter(new FileWriter(name, true));
+        Writer1.println("\nThe room number " + roomNumber + " of the customer " + name + " has been canceled.");
+        Writer1.close();
+        JOptionPane.showMessageDialog(null, "File invoice is available!");
+        
+    }
+
+    
 }
